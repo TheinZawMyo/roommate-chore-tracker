@@ -16,7 +16,7 @@ import {
 import { supabase } from './supabase'
 
 // --- Constants & Helper Functions ---
-const START_DATE = new Date('2026-02-16') // A Monday
+const START_DATE = new Date('2026-02-09') // A Monday
 const ROOMMATES_COUNT = 5
 
 const getMonday = (d) => {
@@ -104,17 +104,19 @@ const formatDateToSql = (date) => {
 const cookingSchedule = computed(() => {
   if (roommates.value.length === 0) return []
   
-  const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-  const weekOffset = weeksSinceStart.value
+  const schedule = [
+    { day: 'Monday', name: 'Nay Htet Oo' },
+    { day: 'Tuesday', name: 'Aung Soe Oo' },
+    { day: 'Wednesday', name: 'Thant Zin Htun' },
+    { day: 'Thursday', name: 'Myint Myat Thu' },
+    { day: 'Friday', name: 'Thein Zaw Myo' }
+  ]
   
-  return weekdays.map((day, dayIdx) => {
-    const roommateIdx = (dayIdx + weekOffset) % ROOMMATES_COUNT
-    const normalizedIdx = roommateIdx < 0 ? roommateIdx + ROOMMATES_COUNT : roommateIdx
-    const chef = roommates.value.find(r => r.order_index === normalizedIdx)
-    
+  return schedule.map(item => {
+    const chef = roommates.value.find(r => r.name === item.name)
     return {
-      day,
-      chef
+      day: item.day,
+      chef: chef || { name: item.name }
     }
   })
 })
